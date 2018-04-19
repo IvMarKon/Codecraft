@@ -1,25 +1,40 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChildren,
+  QueryList,
+  AfterViewInit,
+  ElementRef
+} from '@angular/core';
 
-import { JokeComponent } from '../joke/joke.component';
+import {
+  JokeComponent
+} from '../joke/joke.component';
 
-import { Joke } from '../joke/joke.component';
+import {
+  Joke
+} from '../joke/joke.component';
+import {
+  log
+} from 'util';
 
 @Component({
   selector: 'app-joke-list',
   templateUrl: './joke-list.component.html',
   styleUrls: ['./joke-list.component.css'],
 })
-export class JokeListComponent implements OnInit {
+export class JokeListComponent implements AfterViewInit {
 
-  @ViewChild(JokeComponent) jokeViewChild: JokeComponent; // how to find child component
-
+  @ViewChildren(JokeComponent) jokeViewChild: JokeComponent; // how to find child component
+  @ViewChildren(JokeComponent) jokeViewChildren: QueryList < JokeComponent > ;
+  @ViewChildren('header') headerEl: QueryList<ElementRef>;
   jokes: Joke[] = [];
 
   constructor() {
     this.jokes.push(new Joke('Setup 1', 'Punch 1'));
     this.jokes.push(new Joke('Setup 2', 'Punch 2'));
     this.jokes.push(new Joke('Setup 3', 'Punch 3'));
-    console.log(this);
+    console.log(`new - jokeViewChild is ${this.jokeViewChild}`);
   }
 
   createJoke(joke) {
@@ -30,10 +45,13 @@ export class JokeListComponent implements OnInit {
     this.jokes.unshift(new Joke('Default Joke', 'Default Punch'));
   }
 
-  deleteJoke(){
+  deleteJoke() {
     this.jokes.shift();
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
+    console.log(`ngAfterViewInit - jokeViewChild is`, this.jokeViewChild);
+    console.log(this.jokeViewChildren.toArray());
+    this.headerEl.first.nativeElement.textContent = 'Best Joke Machine';
   }
 }
