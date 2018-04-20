@@ -4,7 +4,10 @@ import {
   ViewChildren,
   QueryList,
   AfterViewInit,
-  ElementRef
+  ElementRef,
+  AfterContentInit,
+  ContentChild,
+  ContentChildren
 } from '@angular/core';
 
 import {
@@ -23,11 +26,14 @@ import {
   templateUrl: './joke-list.component.html',
   styleUrls: ['./joke-list.component.css'],
 })
-export class JokeListComponent implements AfterViewInit {
+export class JokeListComponent implements AfterViewInit, AfterContentInit {
 
   @ViewChildren(JokeComponent) jokeViewChild: JokeComponent; // how to find child component
   @ViewChildren(JokeComponent) jokeViewChildren: QueryList < JokeComponent > ;
   @ViewChildren('header') headerEl: QueryList<ElementRef>;
+
+  @ContentChildren(JokeComponent) jokeContentChild:  QueryList < JokeComponent > ;
+
   jokes: Joke[] = [];
 
   constructor() {
@@ -53,5 +59,9 @@ export class JokeListComponent implements AfterViewInit {
     console.log(`ngAfterViewInit - jokeViewChild is`, this.jokeViewChild);
     console.log(this.jokeViewChildren.toArray());
     this.headerEl.first.nativeElement.textContent = 'Best Joke Machine';
+  }
+
+  ngAfterContentInit() {
+    console.log(`ngAfterContentInit - jokeContentChild is`, this.jokeContentChild.toArray());
   }
 }
